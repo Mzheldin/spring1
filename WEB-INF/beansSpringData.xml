@@ -26,14 +26,27 @@
         </mvc:message-converters>
     </mvc:annotation-driven>
 
-    <context:component-scan base-package="lesson4"/>
+    <context:component-scan base-package="lesson5"/>
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/view/"/>
-        <property name="suffix" value=".jsp"/>
+<!--    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+<!--        <property name="prefix" value="/WEB-INF/view/"/>-->
+<!--        <property name="suffix" value=".jsp"/>-->
+<!--    </bean>-->
+
+    <bean id="templateResolver" class="org.thymeleaf.templateresolver.ServletContextTemplateResolver">
+<!--        <constructor-arg ref="servletContext"/>-->
+        <property name="prefix" value="/WEB-INF/templates/"/>
+        <property name="suffix" value=".html"/>
+        <property name="templateMode" value="HTML5"/>
+    </bean>
+    <bean id="templateEngine" class="org.thymeleaf.spring5.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+    <bean class="org.thymeleaf.spring5.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
     </bean>
 
-    <jpa:repositories base-package="lesson4" />
+    <jpa:repositories base-package="lesson5" />
 
     <bean id="dataSource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -45,7 +58,7 @@
 
     <bean id="entityManagerFactory"
           class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
-        <property name="packagesToScan" value="lesson4"/>
+        <property name="packagesToScan" value="lesson5"/>
         <property name="dataSource" ref="dataSource"/>
 
         <property name="jpaProperties">
@@ -68,5 +81,5 @@
     <tx:annotation-driven/>
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
-
+    <mvc:resources location="classpath:/META-INF/resources/webjars/" mapping="/webjars/**" />
 </beans>
